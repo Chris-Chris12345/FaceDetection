@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 #Using Haar Cascade file, pre-trained face detection model
-HaarFile = 'haarcascade_frontalface_default.xml'
+HaarFile = "C:\OpenCV with python\L8\DataSets\haarcascade_frontalface_default.xml"
 
 Dataset = "C:\OpenCV with python\L8\DataSets"
 sub_dataset = "C:\OpenCV with python\L8\DataSets\Chris"
@@ -15,7 +15,7 @@ if not os.path.isdir(path):
 
 (width, height) = (130,100)
 FaceCascade = cv2.CascadeClassifier(HaarFile)
-webcam = cv2.VideoCapture(1) #0 for the laptop cam and 1 for external cam
+webcam = cv2.VideoCapture(0) #0 for the laptop cam and 1 for external cam
 
 count = 1
 while count < 30:
