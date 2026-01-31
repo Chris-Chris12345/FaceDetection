@@ -14,16 +14,16 @@ Dataset = "C:\OpenCV with python\L8\DataSets"
 sub_dataset = "C:\OpenCV with python\L8\DataSets\Chris"
 path = os.path.join(Dataset,sub_dataset)
 
-for (sub_dataset, Dataset, files) in os.walk(Dataset):
-    for sub_dataset in Dataset:
-        names[id] = sub_dataset
-        subject_path = os.path.join(Dataset,sub_dataset)
+for root, dirs, files in os.walk(Dataset):
+    for sub_dir in dirs:
+        names[id] = sub_dir
+        subject_path = os.path.join(root,sub_dir)
         for file_name in os.listdir(subject_path):
-            path = subject_path + "/" + file_name
+            path = os.path.join(subject_path, file_name)
             label = id
             images.append(cv2.imread(path,0))
             labels.append(int(label))
-    id += 1
+        id += 1
 
 (images,labels) = [np.array(lis)
                    for lis in [images,labels]]
@@ -42,13 +42,18 @@ while 1:
     (_,im) = webcam.read()
     gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 
-    face = FaceCascade.detectMultiScale(1.3,5)
-    for (x,y,w,h) in face:
+    face = FaceCascade.detectMultiScale(gray,1.3,5)
+    for (x,y,w,h) in faces:
         cv2.rectangle(im,(x,y),(x+w,y+h),(255,0,255),2)
         face = gray[y:y+h,x:x+w]
         face_resize = cv2.resize(face,(width,height))
 
         prediction = model.predict(face_resize)
+
+        if prediction[1] < 500:
+            cv2.putText(im,'%s - %.0f' %(names[prediction[0]],prediction[1]),(x-10, y-10), cv2.FONT_HERSHEY_PLAIN,1,(0,255,0))
+        else:
+            cv2.putText(im,'Not recognized' %(names[prediction[0]],prediction[1]),(x-10, y-10), cv2.FONT_HERSHEY_PLAIN,1,(0,255,0))
 
         cv2.imshow("Face",im)
         key = cv2.waitKey(10)
